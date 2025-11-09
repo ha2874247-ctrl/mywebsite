@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HASIB — Search & Coding Guide</title>
+  <style>
+    :root{--accent:#1a73e8;--muted:#556070;--bg:#fbfdff}
+    *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+    body{margin:0;background:linear-gradient(180deg,#fbfdff 0%,#eef6ff 100%);color:#0f172a}
+    .topbar{position:fixed;right:16px;top:14px;z-index:40}
+    .btn{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+    .ghost{background:transparent;color:var(--accent);border:1px solid transparent}
+
+    /* Home (Google-like) */
+    .home{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px}
+    .logo{font-size:72px;font-weight:800;color:var(--accent);letter-spacing:2px}
+    .searchbar{width:min(720px,94%);display:flex;align-items:center;gap:8px;margin-top:18px}
+    .search-input{flex:1;padding:14px 18px;border-radius:28px;border:1px solid #e6eefb;font-size:18px;outline:none;box-shadow:0 10px 30px rgba(26,115,232,0.06)}
+    .links{margin-top:12px;color:var(--muted)}
+
+    /* Sign-in modal */
+    .modal{position:fixed;inset:0;background:rgba(6,10,20,0.45);display:grid;place-items:center;z-index:60}
+    .card{background:white;border-radius:12px;padding:20px;width:360px;box-shadow:0 10px 40px rgba(2,6,23,0.12)}
+    .field{display:flex;flex-direction:column;margin-bottom:12px}
+    .field input{padding:10px;border-radius:8px;border:1px solid #e6eefb}
+    .error{color:#b91c1c;font-size:13px}
+
+    /* Content page */
+    .content{display:none;padding:28px;max-width:980px;margin:0 auto}
+    .byline{color:var(--muted);font-size:14px}
+    .book{background:white;padding:18px;border-radius:10px;border:1px solid #eef6ff;margin-top:16px}
+    .figure{display:flex;gap:18px;align-items:center}
+    .fig-img{width:220px;height:140px;border-radius:8px;background:linear-gradient(160deg,#e6f0ff,#fff);display:grid;place-items:center;border:1px solid #eaf3ff}
+
+    /* Enter button */
+    .enter-wrap{margin-top:18px;text-align:center}
+
+    /* Coding page */
+    .coding{display:none;padding:22px;max-width:1000px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:12px}
+    .card-code{background:white;padding:14px;border-radius:10px;border:1px solid #eef6ff}
+    pre{background:#0f172a;color:#e6eef0;padding:10px;border-radius:8px;overflow:auto;font-size:13px}
+    h1,h2,h3{margin:8px 0}
+
+    @media(max-width:640px){.logo{font-size:48px}.search-input{font-size:16px}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button id="openSign" class="ghost">Sign in</button>
+  </div>
+
+  <!-- HOME / Search -->
+  <main id="homePage" class="home" aria-label="Home">
+    <div class="logo">HASIB</div>
+    <div class="searchbar">
+      <input id="searchInput" class="search-input" placeholder="Search the web or type a URL" aria-label="Search" />
+      <button id="searchBtn" class="btn">Search</button>
+    </div>
+    <div class="links">Type something and press Search — this will open Google results in a new tab.</div>
+    <div style="margin-top:22px;display:flex;gap:10px">
+      <button id="luckyBtn" class="ghost">I'm Feeling Lucky</button>
+      <button id="openSign2" class="ghost">Sign in</button>
+    </div>
+  </main>
+
+  <!-- Sign-in modal -->
+  <div id="signModal" class="modal" style="display:none">
+    <div class="card" role="dialog" aria-modal="true">
+      <h3>Sign in to HASIB</h3>
+      <form id="signForm">
+        <div class="field"><label>Name</label><input id="name" autocomplete="name"/></div>
+        <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password"/></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" id="closeModal" class="ghost">Cancel</button>
+          <button class="btn" type="submit">Sign in</button>
+        </div>
+        <div id="signError" class="error" style="display:none">Please enter name and password (min 4 chars).</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Content page (after sign-in) -->
+  <section id="contentPage" class="content" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div>
+        <h1>What is Internet?</h1>
+        <div class="byline">Written by HASIB</div>
+      </div>
+      <div style="text-align:right">
+        <div id="userGreeting" style="font-weight:600;color:var(--muted)"></div>
+        <button id="signOut" class="ghost" style="margin-top:8px">Sign out</button>
+      </div>
+    </div>
+
+    <article class="book">
+      <h2>Internet — ek kitab ki tarah</h2>
+      <div class="figure">
+        <div class="fig-img" aria-hidden="true">
+          <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="30" cy="30" r="8"/>
+            <circle cx="100" cy="20" r="8"/>
+            <circle cx="170" cy="30" r="8"/>
+            <circle cx="60" cy="90" r="8"/>
+            <circle cx="140" cy="90" r="8"/>
+            <path d="M30 30 L100 20 L170 30" stroke="#1f6feb" stroke-width="2" fill="none"/>
+            <path d="M30 30 L60 90 L140 90 L170 30" stroke="#1f6feb" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <p>Internet ek global network hai jo computers aur devices ko connect karta hai. Ye data packets ke form me information bhejta aur receive karta hai. DNS, TCP/IP, routers, aur servers mil kar internet ko chalate hain.</p>
+          <p class="fig-caption">Figure: Simplified network of devices (nodes) and connections (links).</p>
+        </div>
+      </div>
+
+      <section style="margin-top:12px">
+        <h3>Internet kaise kaam karta hai?</h3>
+        <p>Jab aap browser me kisi domain ko type karte ho, aapka device pehle DNS se IP address leta hai. Phir TCP/IP se connection ban kar packets transfer hote hain. Routers packets ko best route se aapke device tak pahunchate hain.</p>
+      </section>
+
+      <section class="types">
+        <h2 style="margin-top:12px">Type of Internet</h2>
+        <div class="grid">
+          <div class="card-code"><h4>Home Broadband</h4><p>Wired services (DSL, Cable, Fiber) — gharon me high-speed internet.</p></div>
+          <div class="card-code"><h4>Mobile Internet</h4><p>Cellular networks (3G/4G/5G) — portable internet, towers aur spectrum par based.</p></div>
+          <div class="card-code"><h4>Satellite Internet</h4><p>Remote areas ke liye satellites se internet. LEO satellites latency kam kar rahe hain.</p></div>
+          <div class="card-code"><h4>Fixed Wireless</h4><p>Towers se radio waves ke through homes tak internet bhejna — fiber na hone par accha option.</p></div>
+          <div class="card-code"><h4>Fiber Optic</h4><p>Light signals ka use karke high bandwidth aur low latency provide karta hai — backbone networks me use hota hai.</p></div>
+        </div>
+      </section>
+
+      <div class="enter-wrap">
+        <button id="enterBtn" class="btn">Enter → Coding & Types</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- Coding page -->
+  <section id="codingPage" class="coding" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1>All coding types (HTML · CSS · JavaScript · More)</h1>
+        <div class="byline">Design by HASIB</div>
+      </div>
+      <div style="text-align:right">
+        <button id="backHome" class="ghost">Back</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card-code">
+        <h3>HTML</h3>
+        <p>HTML (HyperText Markup Language) web pages ka structure banata hai — headings, paragraphs, links, images sab HTML se hi bante hain.</p>
+        <pre>&lt;!-- simple HTML --&gt;
+&lt;h1&gt;Hello&lt;/h1&gt;
+&lt;p&gt;Yeh paragraph hai.&lt;/p&gt;</pre>
+      </div>
+
+      <div class="card-code">
+        <h3>CSS</h3>
+        <p>CSS (Cascading Style Sheets) HTML elements ko style karta hai — colors, layout, spacing, responsiveness.</p>
+        <pre>/* simple CSS */
+body { font-family: Arial; }
+.logo { color: blue; }</pre>
+      </div>
+
+      <div class="card-code">
+        <h3>JavaScript</h3>
+        <p>JavaScript se web pages interactive bante hain — buttons, forms, animations, data fetching sab JS se hota hai.</p>
+        <pre>// simple JS
+const btn = document.getElementById('test');
+btn.addEventListener('click', ()=> alert('Hello from JS'));</pre>
+      </div>
+
+      <div class="card-code">
+        <h3>Backend (Node, Python etc.)</h3>
+        <p>Server-side code jo data process karta hai, databases se baat karta hai, aur APIs provide karta hai.</p>
+        <pre># simple Python Flask
+from flask import Flask
+app = Flask(__name__)
+@app.route('/')
+def home():
+    return 'Hello'</pre>
+      </div>
+
+      <div class="card-code">
+        <h3>Databases</h3>
+        <p>Data ko store karne ke liye databases use hote hain — MySQL, PostgreSQL, MongoDB jaise options common hain.</p>
+        <pre>-- sample SQL
+SELECT * FROM users WHERE id = 1;</pre>
+      </div>
+
+      <div class="card-code">
+        <h3>APIs & Protocols</h3>
+        <p>APIs (REST/GraphQL) se alag systems interact karte hain. HTTP/HTTPS common protocols hain.</p>
+        <pre>GET /api/users → returns JSON</pre>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    // Basic UI logic (single-file SPA)
+    const openSign = document.getElementById('openSign');
+    const openSign2 = document.getElementById('openSign2');
+    const signModal = document.getElementById('signModal');
+    const closeModal = document.getElementById('closeModal');
+    const signForm = document.getElementById('signForm');
+    const signError = document.getElementById('signError');
+    const homePage = document.getElementById('homePage');
+    const contentPage = document.getElementById('contentPage');
+    const codingPage = document.getElementById('codingPage');
+    const userGreeting = document.getElementById('userGreeting');
+    const signOut = document.getElementById('signOut');
+    const enterBtn = document.getElementById('enterBtn');
+    const backHome = document.getElementById('backHome');
+
+    openSign.addEventListener('click', ()=> signModal.style.display = 'grid');
+    openSign2.addEventListener('click', ()=> signModal.style.display = 'grid');
+    closeModal.addEventListener('click', ()=> signModal.style.display = 'none');
+
+    signForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const password = document.getElementById('password').value;
+      if(!name || password.length < 4){ signError.style.display = 'block'; return; }
+      signError.style.display = 'none';
+      sessionStorage.setItem('hasib_user', name);
+      showContent();
+      signModal.style.display = 'none';
+    });
+
+    function showContent(){
+      const name = sessionStorage.getItem('hasib_user') || 'Guest';
+      userGreeting.textContent = `Hello, ${name}`;
+      homePage.style.display = 'none';
+      contentPage.style.display = 'block';
+      codingPage.style.display = 'none';
+      document.title = 'What is Internet? — HASIB';
+    }
+
+    signOut.addEventListener('click', ()=>{
+      sessionStorage.removeItem('hasib_user');
+      contentPage.style.display = 'none';
+      homePage.style.display = 'flex';
+      document.title = 'HASIB';
+    });
+
+    // If already signed in
+    if(sessionStorage.getItem('hasib_user')) showContent();
+
+    // Search behaviour
+    const searchBtn = document.getElementById('searchBtn');
+    const luckyBtn = document.getElementById('luckyBtn');
+    const searchInput = document.getElementById('searchInput');
+
+    searchBtn.addEventListener('click', ()=>{
+      const q = encodeURIComponent(searchInput.value.trim());
+      const url = q ? `https://www.google.com/search?q=${q}` : 'https://www.google.com';
+      window.open(url, '_blank');
+    });
+    luckyBtn.addEventListener('click', ()=>{
+      const q = encodeURIComponent(searchInput.value.trim() || 'feeling lucky');
+      window.open(`https://www.google.com/search?q=${q}&btnI=I`, '_blank');
+    });
+    searchInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') searchBtn.click(); });
+
+    // Enter to coding page
+    enterBtn.addEventListener('click', ()=>{
+      contentPage.style.display = 'none';
+      codingPage.style.display = 'block';
+      document.title = 'Coding Types — HASIB';
+      window.scrollTo(0,0);
+    });
+
+    backHome.addEventListener('click', ()=>{
+      codingPage.style.display = 'none';
+      contentPage.style.display = 'block';
+      document.title = 'What is Internet? — HASIB';
+    });
+
+  </script>
+</body>
+</html>
